@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy 3rd Anniversary</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Pinyon+Script&family=EB+Garamond:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #f5ede0;
+    --parchment: #ede0cc;
+    --envelope-front: #c8a97e;
+    --envelope-dark: #a8835a;
+    --envelope-shadow: #8a6440;
+    --rose: #c0607a;
+    --rose-light: #e8a0b4;
+    --ink: #3a2518;
+    --ink-light: #5c3d2a;
+    --gold: #c9973a;
+    --gold-light: #e8c06a;
+    --wax: #9e2a2b;
+  }
+
+  body {
+    background: #1a0f08;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'EB Garamond', serif;
+    overflow-x: hidden;
+    padding: 20px;
+  }
+
+  /* Ambient background */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 30% 40%, rgba(180,100,50,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 75% 65%, rgba(160,80,100,0.10) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Floating petals */
+  .petal {
+    position: fixed;
+    width: 8px; height: 12px;
+    border-radius: 50% 0 50% 0;
+    opacity: 0;
+    pointer-events: none;
+    animation: fall linear infinite;
+  }
+  .petal:nth-child(1)  { background: rgba(192,96,122,0.5); left: 10%; animation-duration: 9s;  animation-delay: 0s;   top: -20px; }
+  .petal:nth-child(2)  { background: rgba(232,160,180,0.4); left: 25%; animation-duration: 12s; animation-delay: 3s;  top: -20px; }
+  .petal:nth-child(3)  { background: rgba(192,96,122,0.45); left: 45%; animation-duration: 10s; animation-delay: 1s;  top: -20px; }
+  .petal:nth-child(4)  { background: rgba(232,160,180,0.35); left: 65%; animation-duration: 14s; animation-delay: 5s;  top: -20px; }
+  .petal:nth-child(5)  { background: rgba(192,96,122,0.4); left: 82%; animation-duration: 11s; animation-delay: 2s;  top: -20px; }
+  .petal:nth-child(6)  { background: rgba(201,151,58,0.3); left: 55%; animation-duration: 13s; animation-delay: 7s;  top: -20px; }
+
+  @keyframes fall {
+    0%   { opacity: 0; transform: translateY(0) rotate(0deg) translateX(0); }
+    10%  { opacity: 0.8; }
+    90%  { opacity: 0.5; }
+    100% { opacity: 0; transform: translateY(105vh) rotate(360deg) translateX(60px); }
+  }
+
+  /* Scene wrapper */
+  .scene {
+    perspective: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    width: 100%;
+    max-width: 520px;
+  }
+
+  .title-text {
+    font-family: 'Pinyon Script', cursive;
+    color: var(--gold-light);
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    text-align: center;
+    text-shadow: 0 0 30px rgba(201,151,58,0.4), 0 2px 4px rgba(0,0,0,0.5);
+    letter-spacing: 0.02em;
+    animation: fadeUp 1.2s ease forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── ENVELOPE ── */
+  .envelope-wrapper {
+    position: relative;
+    width: min(420px, 90vw);
+    animation: fadeUp 1.4s ease 0.3s forwards;
+    opacity: 0;
+  }
+
+  .envelope {
+    position: relative;
+    width: 100%;
+    padding-bottom: 65%;
+    cursor: pointer;
+    filter: drop-shadow(0 20px 50px rgba(0,0,0,0.6));
+    transition: filter 0.3s;
+  }
+  .envelope:hover { filter: drop-shadow(0 24px 60px rgba(201,151,58,0.3)) drop-shadow(0 20px 50px rgba(0,0,0,0.5)); }
+
+  .env-body, .env-flap, .env-bottom, .env-left, .env-right {
+    position: absolute;
+  }
+
+  /* Envelope body */
+  .env-body {
+    inset: 0;
+  }
+  .env-body svg { width: 100%; height: 100%; }
+
+  /* Flap (top triangle) */
+  .env-flap {
+    top: 0; left: 0; right: 0;
+    height: 55%;
+    transform-origin: top center;
+    transform-style: preserve-3d;
+    transition: transform 0.9s cubic-bezier(0.4,0,0.2,1);
+    z-index: 10;
+  }
+  .env-flap svg { width: 100%; height: 100%; }
+
+  .envelope.open .env-flap {
+    transform: rotateX(-178deg);
+  }
+
+  /* Wax seal */
+  .wax-seal {
+    position: absolute;
+    left: 50%; top: 52%;
+    transform: translate(-50%, -50%);
+    width: 54px; height: 54px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #c0393a, #7a1a1b);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,200,200,0.2);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 15;
+    transition: opacity 0.3s, transform 0.3s;
+    cursor: pointer;
+  }
+  .wax-seal::after {
+    content: '♥';
+    color: rgba(255,220,220,0.9);
+    font-size: 20px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  }
+  .envelope.open .wax-seal {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+    pointer-events: none;
+  }
+
+  /* Letter emerging */
+  .letter-pull {
+    position: absolute;
+    bottom: 8%; left: 10%; right: 10%;
+    background: var(--cream);
+    border-radius: 2px;
+    transform: translateY(0);
+    transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    z-index: 5;
+    overflow: hidden;
+  }
+  .letter-pull::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      transparent,
+      transparent 28px,
+      rgba(160,130,90,0.15) 28px,
+      rgba(160,130,90,0.15) 29px
+    );
+    pointer-events: none;
+  }
+
+  .letter-preview {
+    padding: 14px 16px 10px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.78rem;
+    color: var(--ink-light);
+    font-style: italic;
+    line-height: 1.6;
+    opacity: 0;
+    transition: opacity 0.5s 0.9s;
+    pointer-events: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .envelope.open .letter-pull {
+    transform: translateY(-90%);
+  }
+  .envelope.open .letter-preview {
+    opacity: 1;
+  }
+
+  /* ── FULL LETTER ── */
+  .letter-container {
+    width: min(480px, 92vw);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 1.2s cubic-bezier(0.4,0,0.2,1) 0.6s, opacity 0.8s 0.7s;
+    opacity: 0;
+    animation: none;
+  }
+  .letter-container.visible {
+    max-height: 2000px;
+    opacity: 1;
+  }
+
+  .letter-paper {
+    background: var(--cream);
+    border-radius: 2px;
+    padding: clamp(28px, 6vw, 48px) clamp(24px, 6vw, 44px);
+    box-shadow:
+      0 2px 0 var(--parchment),
+      0 4px 0 rgba(0,0,0,0.05),
+      0 20px 60px rgba(0,0,0,0.4),
+      inset 0 0 80px rgba(180,140,90,0.08);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Paper texture lines */
+  .letter-paper::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      transparent,
+      transparent 31px,
+      rgba(160,130,90,0.12) 31px,
+      rgba(160,130,90,0.12) 32px
+    );
+    pointer-events: none;
+  }
+
+  /* Decorative corner flourish */
+  .letter-paper::after {
+    content: '';
+    position: absolute;
+    top: 10px; right: 10px;
+    width: 60px; height: 60px;
+    border-top: 1.5px solid rgba(201,151,58,0.3);
+    border-right: 1.5px solid rgba(201,151,58,0.3);
+    border-radius: 0 4px 0 0;
+  }
+
+  .letter-deco-tl {
+    position: absolute;
+    top: 10px; left: 10px;
+    width: 60px; height: 60px;
+    border-top: 1.5px solid rgba(201,151,58,0.3);
+    border-left: 1.5px solid rgba(201,151,58,0.3);
+    border-radius: 4px 0 0 0;
+  }
+
+  .letter-header {
+    text-align: center;
+    margin-bottom: 28px;
+    position: relative;
+  }
+
+  .letter-header .anniv {
+    font-family: 'Pinyon Script', cursive;
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    color: var(--rose);
+    line-height: 1.2;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+
+  .divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 10px auto;
+    max-width: 220px;
+  }
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(201,151,58,0.5), transparent);
+  }
+  .divider-heart {
+    color: var(--rose);
+    font-size: 0.7rem;
+    opacity: 0.8;
+  }
+
+  .letter-body {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.95rem, 2.2vw, 1.08rem);
+    line-height: 1.85;
+    color: var(--ink);
+    position: relative;
+    z-index: 1;
+  }
+
+  .letter-body p {
+    margin-bottom: 1.1em;
+    text-indent: 1.5em;
+  }
+  .letter-body p:first-child { text-indent: 0; }
+
+  .salutation {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.05em;
+    color: var(--ink-light);
+    margin-bottom: 0.4em !important;
+    text-indent: 0 !important;
+  }
+
+  .closing {
+    text-align: right;
+    margin-top: 24px;
+    font-family: 'Pinyon Script', cursive;
+    font-size: clamp(1.3rem, 3.5vw, 1.7rem);
+    color: var(--rose);
+    line-height: 1.6;
+  }
+
+  .closing .sign-from {
+    display: block;
+    font-size: 0.7em;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--ink-light);
+    margin-bottom: 4px;
+  }
+
+  /* Footnote rose */
+  .letter-footer {
+    text-align: center;
+    margin-top: 20px;
+    color: var(--rose-light);
+    font-size: 1.1rem;
+    letter-spacing: 0.3em;
+    opacity: 0.6;
+  }
+
+  /* CTA button */
+  .btn-close {
+    display: inline-flex;
+    align-items: center; gap: 8px;
+    background: none;
+    border: 1px solid rgba(201,151,58,0.4);
+    color: var(--gold-light);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    padding: 9px 22px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 16px;
+    text-transform: uppercase;
+  }
+  .btn-close:hover {
+    background: rgba(201,151,58,0.1);
+    border-color: rgba(201,151,58,0.7);
+    color: var(--gold-light);
+    box-shadow: 0 0 20px rgba(201,151,58,0.15);
+  }
+
+  .hint {
+    color: rgba(200,169,126,0.5);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    text-align: center;
+    animation: pulse 2.5s ease-in-out infinite;
+    animation-delay: 2s;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+  .hint.hidden { opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+
+</style>
+</head>
+<body>
+
+<!-- Floating petals -->
+<div class="petal"></div>
+<div class="petal"></div>
+<div class="petal"></div>
+<div class="petal"></div>
+<div class="petal"></div>
+<div class="petal"></div>
+
+<div class="scene">
+  <div class="title-text">A Letter for You ♡</div>
+
+  <!-- ENVELOPE -->
+  <div class="envelope-wrapper">
+    <div class="envelope" id="envelope" onclick="toggleEnvelope()">
+
+      <!-- Envelope body (back) -->
+      <div class="env-body">
+        <svg viewBox="0 0 420 273" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Back rectangle -->
+          <rect width="420" height="273" rx="4" fill="#b8915e"/>
+          <!-- Inner shadow sides -->
+          <polygon points="0,0 210,150 420,0" fill="#c9a575" opacity="0.6"/>
+          <polygon points="0,0 0,273 155,150" fill="#a07845" opacity="0.4"/>
+          <polygon points="420,0 420,273 265,150" fill="#a07845" opacity="0.4"/>
+          <polygon points="0,273 210,150 420,273" fill="#c9a575" opacity="0.5"/>
+          <!-- Border -->
+          <rect x="1" y="1" width="418" height="271" rx="3" fill="none" stroke="rgba(255,220,160,0.2)" stroke-width="1"/>
+        </svg>
+      </div>
+
+      <!-- Letter peeking out -->
+      <div class="letter-pull">
+        <div class="letter-preview">Happy 3rd Anniversary, Hon...</div>
+      </div>
+
+      <!-- Flap -->
+      <div class="env-flap" id="envFlap">
+        <svg viewBox="0 0 420 150" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block">
+          <!-- Flap triangle - front face -->
+          <polygon points="0,0 420,0 210,138" fill="#c9a575"/>
+          <!-- Shade line -->
+          <polygon points="0,0 420,0 210,138" fill="url(#flapGrad)" opacity="0.5"/>
+          <!-- Border -->
+          <polygon points="0,0 420,0 210,138" fill="none" stroke="rgba(255,220,160,0.15)" stroke-width="1"/>
+          <defs>
+            <linearGradient id="flapGrad" x1="210" y1="0" x2="210" y2="138" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#fff" stop-opacity="0.1"/>
+              <stop offset="100%" stop-color="#000" stop-opacity="0.15"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <!-- Wax seal on flap -->
+        <div class="wax-seal" id="waxSeal"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <p class="hint" id="hint">— tap the envelope to open —</p>
+
+  <!-- FULL LETTER -->
+  <div class="letter-container" id="letterContainer">
+    <div class="letter-paper">
+      <div class="letter-deco-tl"></div>
+
+      <div class="letter-header">
+        <div class="anniv">Happy 3rd Anniversary, Hon</div>
+        <div class="divider">
+          <div class="divider-line"></div>
+          <div class="divider-heart">❧</div>
+          <div class="divider-line"></div>
+        </div>
+      </div>
+
+      <div class="letter-body">
+        <p>We got into a fight yesterday and got misunderstanding to each other. Things that are normal to a relationship but with understanding and support, it will help the bond to get stronger.</p>
+
+        <p>Even we fought, we sulk, we ignored — but I must say, you ignored me very much. However, it never came to my mind to find another one else. I chose to be like this because I realized it was easy to have a clear mind without any problems, without hiding something.</p>
+
+        <p>Those journeys we have are not perfect, but they were the best and balanced to continue our relationship. I must say that the last mistakes we have are definitely not good. That will be the last.</p>
+
+        <p class="salutation">To you, Honey —</p>
+
+        <p>I will support whatever you wanted to be; whether you become a nun or a nurse, I will be there — your companion into your journey.</p>
+
+        <p>But if you choose to become a nun, I would gladly accept your choice and understand your decision. It may be rough, but it is for your happiness and God wanted us to be happy.</p>
+
+        <p>I am just your partner, an individual being, supporting every step and path you take. I will be there, and we will meet if fate wants us to meet again.</p>
+
+        <p>Thank you for your support and your worries — and I might say, I forget things, but thank you for always reminding me.</p>
+
+        <p style="text-indent:0; text-align:center; font-style:italic; color: var(--rose); font-size: 1.05em;">Once again, Happy 3rd Anniversary, Honey.</p>
+      </div>
+
+      <div class="closing">
+        <span class="sign-from">With all my heart,</span>
+        Yours ♡
+      </div>
+
+      <div class="letter-footer">✦ &nbsp; ✦ &nbsp; ✦</div>
+    </div>
+
+    <div style="text-align:center; margin-top: 12px;">
+      <button class="btn-close" onclick="toggleEnvelope()">↑ Close Letter</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let isOpen = false;
+
+  function toggleEnvelope() {
+    isOpen = !isOpen;
+    const env = document.getElementById('envelope');
+    const lc  = document.getElementById('letterContainer');
+    const hint = document.getElementById('hint');
+
+    if (isOpen) {
+      env.classList.add('open');
+      hint.classList.add('hidden');
+      setTimeout(() => {
+        lc.classList.add('visible');
+        lc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 700);
+    } else {
+      lc.classList.remove('visible');
+      hint.classList.remove('hidden');
+      setTimeout(() => {
+        env.classList.remove('open');
+        env.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 400);
+    }
+  }
+</script>
+</body>
+</html>
